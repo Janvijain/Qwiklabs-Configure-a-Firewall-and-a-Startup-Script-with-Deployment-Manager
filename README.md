@@ -10,14 +10,14 @@ Open Editor
 Delete all the content of qwiklabs.jinja and paste                           
 
 resources:   
-- name: default-allow-http
-  type: compute.v1.firewall
-  properties:
-    targetTags: ["http"]
-    sourceRanges: ["0.0.0.0/0"]
-    allowed:
-      - IPProtocol: TCP
-        ports: ["80"]
+- name: default-allow-http                               
+  type: compute.v1.firewall                             
+  properties:                              
+    targetTags: ["http"]                               
+    sourceRanges: ["0.0.0.0/0"]                            
+    allowed:                              
+      - IPProtocol: TCP                                
+        ports: ["80"]                                
 - type: compute.v1.instance                            
   name: vm-test                        
   properties:                         
@@ -48,9 +48,9 @@ resources:
                                              
 To save press Ctrl+S                                                   
 
-To deploy requirements
-Cloud Shell
-gcloud deployment-manager deployments create deployment-templates --config qwiklabs.yaml 
+To deploy requirements                              
+Cloud Shell                          
+gcloud deployment-manager deployments create deployment-templates --config qwiklabs.yaml                
 
 Navigation Menu -> Compute Engine ->VM Instances ->vm-test ->Edit                    
 Firewalls                                 
@@ -59,7 +59,7 @@ Save
 
 Click on External IP to view Apache page                     
 
-Check My Progress
+Check My Progress                     
 
 # Congratulations! you have successfully completed your lab                       
 
