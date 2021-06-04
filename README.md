@@ -1,65 +1,57 @@
 # Qwiklabs Configure a Firewall and a Startup Script with Deployment Manager
 
-Cloude Shell                     
-mkdir deployment_manager                       
+Step 1 : Run these commands -                   
+
+mkdir deployment_manager                     
 cd deployment_manager                           
-gsutil cp gs://spls/gsp302/* .                          
+gsutil cp gs://spls/gsp302/* .                   
+  
+Step 2: Delete all the lines starting from line 24 in config file.                
 
-Open Editor                                  
- 
-Delete all the content of qwiklabs.jinja and paste                           
+Step 3: Put the below code by deleting all the previous code in jinga file.                                       
 
-resources:   
-- name: default-allow-http                               
-  type: compute.v1.firewall                             
-  properties:                              
-    targetTags: ["http"]                               
-    sourceRanges: ["0.0.0.0/0"]                            
-    allowed:                              
-      - IPProtocol: TCP                                
-        ports: ["80"]                                
-- type: compute.v1.instance                            
-  name: vm-test                        
-  properties:                         
-    zone: {{ properties["zone"] }}                       
-    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro                      
-    #For examples on how to use startup scripts on an instance, see:                               
-    #https://cloud.google.com/compute/docs/startupscript                 
-    tags:                             
-        items: ["http"]                    
-    metadata:                       
-      items:                    
-      - key: startup-script                    
-        value: "apt-get update \n apt-get install -y apache2"             
-    disks:                         
-    - deviceName: boot                         
-      type: PERSISTENT                          
-      boot: true                       
-      autoDelete: true                            
-      initializeParams:                              
-        diskName: disk-{{ env["deployment"] }}                    
-        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9                             
-    networkInterfaces:                                                                                               
-    - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default                                        
-      #Access Config required to give the instance a public IP address                                                                
-      accessConfigs: 
-      -name: External NAT
-       type: ONE_TO_ONE_NAT
-                                             
-To save press Ctrl+S                                                   
+resources:                                       
+- name: my-default-allow-http                         
+  type: compute.v1.firewall                 
+  properties:                       
+    targetTags: ["http"]                 
+    sourceRanges: ["0.0.0.0/0"]                         
+    allowed:                    
+      - IPProtocol: TCP                        
+        ports: ["80"]                   
+- type: compute.v1.instance                        
+  name: vm-test                            
+  properties:                        
+    zone: {{ properties["zone"] }}                      
+    tags:                                 
+      items: ["http"]                         
+    machineType: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/zones/{{ properties["zone"] }}/machineTypes/f1-micro                    
+    # For examples on how to use startup scripts on an instance, see:                              
+    # https://cloud.google.com/compute/docs/startupscript                         
+    disks:                  
+    - deviceName: boot                             
+      type: PERSISTENT                
+      boot: true                 
+      autoDelete: true                      
+      initializeParams:               
+        diskName: disk-{{ env["deployment"] }}                       
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9                       
+    networkInterfaces:                       
+    - network: https://www.googleapis.com/compute/v1/projects/{{ env["project"] }}/global/networks/default                  
+      # Access Config required to give the instance a public IP address                                      
+      accessConfigs:                                                      
+      - name: External NAT                         
+        type: ONE_TO_ONE_NAT                      
+    metadata:                        
+      items:                       
+      - key: startup-script                           
+        value: |                      
+          #!/bin/bash                            
+          apt-get update && apt-get install -y apache2                          
 
-To deploy requirements                              
-Cloud Shell                          
-gcloud deployment-manager deployments create deployment-templates --config qwiklabs.yaml                
+Step 4: Run this command -                                
 
-Navigation Menu -> Compute Engine ->VM Instances ->vm-test ->Edit                    
-Firewalls                                 
-Check Allow HTTP traffic                                
-Save                           
-
-Click on External IP to view Apache page                     
-
-Check My Progress                     
+gcloud deployment-manager deployments create vm-test --config qwiklabs.yaml                                  
 
 # Congratulations! you have successfully completed your lab                       
 
